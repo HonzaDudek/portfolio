@@ -34,9 +34,10 @@ const StyledTextField = styled(TextField)({
 });
 
 export const QueryForm = (): JSX.Element => {
-  const { control, handleSubmit } = useForm<IFormInputs>(FormDefaultValues);
+  const { control, handleSubmit } = useForm<IFormInputs>();
 
   const onSubmit: SubmitHandler<IFormInputs> = data => {
+    // eslint-disable-next-line no-console
     console.log(data);
   };
 
@@ -48,7 +49,7 @@ export const QueryForm = (): JSX.Element => {
         defaultValue=''
         render={({ field }) => (
           <StyledTextField
-            id='outlined-basic'
+            id='firstName'
             label='Jméno'
             variant='outlined'
             {...field}
@@ -61,7 +62,7 @@ export const QueryForm = (): JSX.Element => {
         defaultValue=''
         render={({ field }) => (
           <StyledTextField
-            id='outlined-basic'
+            id='lastName'
             label='Příjmení'
             variant='outlined'
             {...field}
@@ -74,7 +75,7 @@ export const QueryForm = (): JSX.Element => {
         defaultValue=''
         render={({ field }) => (
           <StyledTextField
-            id='outlined-basic'
+            id='email'
             label='E-mail'
             variant='outlined'
             {...field}
@@ -87,7 +88,7 @@ export const QueryForm = (): JSX.Element => {
         defaultValue=''
         render={({ field }) => (
           <StyledTextField
-            id='outlined-basic'
+            id='phone'
             label='Telefon'
             variant='outlined'
             {...field}
@@ -100,7 +101,7 @@ export const QueryForm = (): JSX.Element => {
         defaultValue=''
         render={({ field }) => (
           <StyledTextField
-            id='outlined-basic'
+            id='query'
             label='Popis projektu'
             variant='outlined'
             {...field}

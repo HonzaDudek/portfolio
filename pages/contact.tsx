@@ -7,7 +7,7 @@ import { QueryForm } from '../src/components/queryForm/queryForm';
 import { ContactItem } from '../src/components/molecules/contactItem';
 import { StyledSection } from './index';
 
-const Contact = () =>  {
+const Contact = () => {
   const theme = useTheme();
 
   return (
