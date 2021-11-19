@@ -1,0 +1,55 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint",
+        "jsx-a11y",
+        "import"
+    ],
+    "extends": [
+        "plugin:react/recommended",
+        // Uses the recommended rules from @eslint-plugin-react
+        "plugin:@typescript-eslint/recommended",
+        // Uses the recommended rules from @typescript-eslint/eslint-plugin
+        "plugin:jsx-a11y/strict",
+        // Uses strict rules from jsx-a11y
+        "plugin:prettier/recommended",
+        "prettier/@typescript-eslint"
+    ],
+    "rules": {
+        "prettier/prettier": "warn",
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "import/order": [
+            "error"
+        ],
+        "no-console": "error"
+    },
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        // Allows for the parsing of modern ECMAScript features
+        "sourceType": "module",
+        // Allows for the use of imports
+        "ecmaFeatures": {
+            "jsx": true
+            // Allows for the parsing of JSX
+        }
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+            // Tells eslint-plugin-react to automatically detect the version of React to use
+        }
+    },
+    "overrides": [
+        {
+            "files": [
+                "**/*.tsx"
+            ],
+            "rules": {
+                "react/prop-types": "off"
+            }
+        }
+    ]
+}
