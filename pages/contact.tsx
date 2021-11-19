@@ -7,7 +7,7 @@ import { QueryForm } from '../src/components/queryForm/queryForm';
 import { ContactItem } from '../src/components/molecules/contactItem';
 import { StyledSection } from './index';
 
-export default function Contact() {
+const Contact = () =>  {
   const theme = useTheme();
 
   return (
@@ -43,4 +43,6 @@ export default function Contact() {
       </StyledSection>
     </Box>
   );
-}
+};
+
+export default Contact;
