@@ -10,14 +10,6 @@ interface IFormInputs {
   query: string;
 }
 
-const FormDefaultValues = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  query: '',
-};
-
 const StyledForm = styled('form')({
   display: 'flex',
   flexDirection: 'column',
@@ -36,9 +28,26 @@ const StyledTextField = styled(TextField)({
 export const QueryForm = (): JSX.Element => {
   const { control, handleSubmit } = useForm<IFormInputs>();
 
-  const onSubmit: SubmitHandler<IFormInputs> = data => {
-    // eslint-disable-next-line no-console
-    console.log(data);
+  const onSubmit: SubmitHandler<IFormInputs> = async data => {
+    const res = await fetch('/api/sendgrid', {
+      body: JSON.stringify({
+        email: data.email,
+        fullname: `${data.firstName} ${data.lastName}`,
+        subject: 'Poptávka z webu honzadudek.cz',
+        message: data.query,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    });
+
+    const { error } = await res.json();
+    if (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+      return;
+    }
   };
 
   return (
