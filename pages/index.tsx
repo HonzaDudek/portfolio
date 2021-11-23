@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ReactFullpage from '@fullpage/react-fullpage';
 import { styled } from '@mui/material/styles';
 import {
@@ -9,24 +9,14 @@ import {
   useTheme,
 } from '@mui/material';
 import Image, { ImageProps } from 'next/image';
-import theme, { CustomTheme } from '../src/styles/theme';
+import theme from '../src/styles/theme';
 import Layout from '../src/components/layout';
 import { Navigation } from '../src/components/navigation';
-import { handExitComplete } from '../src/utils/handleTransition';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as profilePicture from '../public/images/profile.jpg';
-import About, { AboutButton } from './about';
 import Services from './services';
 import Contact from './contact';
-
-const StyledCtaButton = styled(Button)(() => ({
-  backgroundColor: theme.customTheme.colors.terciary,
-  color: theme.palette.text.secondary,
-  height: 60,
-  width: 300,
-  marginTop: 30,
-}));
 
 const StyledHighlightedText = styled(Typography)(({ theme: CustomTheme }) => ({
   color: theme.customTheme.colors.terciary,
@@ -39,7 +29,7 @@ interface StyledSectionProps {
 
 export const StyledSection = styled(Box)<StyledSectionProps>(
   ({ theme, sectionPosition, reverseFlow }) => ({
-    margin: '100px auto 0 auto',
+    margin: '50px auto 0 auto',
     width: '100%',
 
     display: 'flex',
@@ -49,7 +39,7 @@ export const StyledSection = styled(Box)<StyledSectionProps>(
 
     [theme.breakpoints.up('md')]: {
       maxWidth: sectionPosition === 'left' ? 700 : 770,
-
+      margin: '100px auto 0 auto',
       padding: 20,
       flexDirection: 'column',
     },
@@ -174,11 +164,6 @@ const Home = (): JSX.Element => {
           <Contact />
         </ReactFullpage.Wrapper>
       </StyledPage>
-      {/*<StyledPage id={'#about'} order={2}>*/}
-      {/*  <ReactFullpage.Wrapper>*/}
-      {/*    <About />*/}
-      {/*  </ReactFullpage.Wrapper>*/}
-      {/*</StyledPage>*/}
     </Layout>
   );
 };

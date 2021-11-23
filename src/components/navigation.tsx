@@ -27,13 +27,34 @@ const StyledMenu = styled(List)(() => ({
   marginLeft: 'auto',
 }));
 
+const StyledDrawer = styled(Drawer)(() => ({
+  width: '50vw',
+
+  '& .MuiDrawer-paper': {
+    width: '50vw',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    marginLeft: 'auto',
+
+    '& li:before': {
+      content: '" "',
+      width: '15%',
+      height: 2,
+      backgroundColor: 'grey',
+      marginRight: 10,
+    },
+  },
+}));
+
 export const Navigation = (): JSX.Element => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  const handleClose = (section: string) => {
+    handExitComplete(section);
     setAnchorEl(null);
   };
 
@@ -65,13 +86,11 @@ export const Navigation = (): JSX.Element => {
           >
             <MenuIcon />
           </IconButton>
-          <Drawer anchor={'right'} open={open} onClose={handleClose}>
-            <>
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
-            </>
-          </Drawer>
+          <StyledDrawer anchor={'right'} open={open} onClose={handleClose}>
+            <MenuItem onClick={() => handleClose('#home')}>Domů</MenuItem>
+            <MenuItem onClick={() => handleClose('#services')}>Služby</MenuItem>
+            <MenuItem onClick={() => handleClose('#contact')}>Kontakt</MenuItem>
+          </StyledDrawer>
         </>
       )}
     </StyledHeader>

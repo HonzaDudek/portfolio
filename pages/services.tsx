@@ -53,10 +53,11 @@ export const StyleServiceList = styled(Box)(({ theme }) => ({
   padding: 10,
   gap: 20,
   maxWidth: 1280,
-  margin: '100px auto 0 auto',
+  margin: '50px auto 0 auto',
 
   [theme.breakpoints.up('md')]: {
     gridTemplateColumns: '1fr 1fr',
+    margin: '100px auto 0 auto',
   },
 }));
 
