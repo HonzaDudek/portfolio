@@ -1,14 +1,10 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import {
-  Button,
   Drawer,
   IconButton,
   List,
-  ListItemButton,
-  ListItemProps,
   ListItemText,
-  Menu,
   MenuItem,
   useMediaQuery,
   useTheme,
@@ -31,7 +27,7 @@ const StyledMenu = styled(List)(() => ({
   marginLeft: 'auto',
 }));
 
-export const Navigation = () => {
+export const Navigation = (): JSX.Element => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = event => {
@@ -50,9 +46,6 @@ export const Navigation = () => {
         <StyledMenu>
           <MenuItem onClick={() => handExitComplete('#home')}>
             <ListItemText>Domů</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={() => handExitComplete('#about')}>
-            <ListItemText>O mě</ListItemText>
           </MenuItem>
           <MenuItem onClick={() => handExitComplete('#services')}>
             <ListItemText>Služby</ListItemText>
