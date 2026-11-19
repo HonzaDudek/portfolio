@@ -1,54 +1,57 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import sendgrid from '@sendgrid/mail';
 
-sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
+const RECIPIENT = 'honza@honzadudek.cz';
 
-const sendEmail = async (req, res): Promise<void> => {
+const HTML_ENTITIES: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+};
+
+const escapeHtml = (value: unknown): string =>
+  String(value ?? '').replace(/[&<>"']/g, (char) => HTML_ENTITIES[char]);
+
+const sendEmail = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> => {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const apiKey = process.env.SENDGRID_API_KEY;
+  if (!apiKey) {
+    return res.status(500).json({ error: 'SENDGRID_API_KEY is not configured' });
+  }
+  sendgrid.setApiKey(apiKey);
+
+  const { fullname, email, subject, message } = req.body ?? {};
+  if (!email || !message) {
+    return res.status(400).json({ error: 'Missing email or message' });
+  }
+
   try {
-    // console.log("REQ.BODY", req.body);
     await sendgrid.send({
-      to: 'honza@honzadudek.cz', // Your email where you'll receive emails
-      from: 'honza@honzadudek.cz', // your website email address here
-      subject: `${req.body.subject}`,
-      html: `\`<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-      <html lang="en">
-      <head>
-        <meta charset="utf-8">      
-        <title>Poptávka ze serveru honzadudek.cz</title>
-        <meta name="description" content="The HTML5 Herald">
-        <meta name="author" content="SitePoint">
-        <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />      
-        <link rel="stylesheet" href="css/styles.css?v=1.0">
-      
-      </head>
-      
-      <body>
-        <div class="img-container" style="display: flex;justify-content: center;align-items: center;border-radius: 5px;overflow: hidden; font-family: 'helvetica', 'ui-sans';">              
-              </div>
-              <div class="container" style="margin-left: 20px;margin-right: 20px;">
-              <h3>You've got a new mail from ${req.body.fullname}, their email is: ✉️${req.body.email} </h3>
-              <div style="font-size: 16px;">
-              <p>Message:</p>
-              <p>${req.body.message}</p>
-              <br>
-              </div>
-              <img src="https://manuarora.in/logo.png" class="logo-image" style="height: 50px;width: 50px;border-radius: 5px;overflow: hidden;">
-              <p class="footer" style="font-size: 16px;padding-bottom: 20px;border-bottom: 1px solid #D1D5DB;">Regards<br>Manu Arora<br>Software Developer<br>+91 9587738861</p>
-              <div class="footer-links" style="display: flex;justify-content: center;align-items: center;">
-                <a href="https://manuarora.in/" style="text-decoration: none;margin: 8px;color: #9CA3AF;">Website</a>
-                <a href="https://manuarora.in/blog/" style="text-decoration: none;margin: 8px;color: #9CA3AF;">Blog</a>
-                <a href="https://github.com/manuarora700/" style="text-decoration: none;margin: 8px;color: #9CA3AF;">GitHub</a>
-                <a href="https://instagram.com/maninthere/" style="text-decoration: none;margin: 8px;color: #9CA3AF;">Instagram</a>
-                <a href="https://linkedin.com/in/manuarora28/" style="text-decoration: none;margin: 8px;color: #9CA3AF;">LinkedIn</a>
-                <a href="https://twitter.com/mannupaaji/" style="text-decoration: none;margin: 8px;color: #9CA3AF;">Twitter</a>
-                
-              </div>
-              </div>
-      </body>
-      </html>`,
+      to: RECIPIENT,
+      from: RECIPIENT, // must be a verified sender in SendGrid
+      replyTo: String(email),
+      subject: String(subject || 'Poptávka z webu honzadudek.cz'),
+      html: `<!DOCTYPE html>
+<html lang="cs">
+  <head><meta charset="utf-8"><title>Poptávka ze serveru honzadudek.cz</title></head>
+  <body style="font-family: helvetica, sans-serif; margin: 20px;">
+    <h3>Nová poptávka od ${escapeHtml(fullname)} (${escapeHtml(email)})</h3>
+    <p>Zpráva:</p>
+    <p style="font-size: 16px; white-space: pre-wrap;">${escapeHtml(message)}</p>
+  </body>
+</html>`,
     });
   } catch (error) {
-    // console.log(error);
-    return res.status(error.statusCode || 500).json({ error: error.message });
+    return res.status(error.code || 500).json({ error: error.message });
   }
 
   return res.status(200).json({ error: '' });
