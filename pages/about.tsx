@@ -22,6 +22,7 @@ export default function About() {
       <StyledSection sectionPosition={'left'}>
         <StyledImage
           src={'/images/profile.jpg'}
+          alt='Jan Dudek'
           layout={'responsive'}
           height={150}
           width={150}

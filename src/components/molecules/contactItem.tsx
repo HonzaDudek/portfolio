@@ -23,7 +23,7 @@ export const ContactItem = ({
   children,
   itemName,
   itemValue,
-}: PropsWithChildren<IContactItemProps>): JSX.Element => {
+}: PropsWithChildren<IContactItemProps>): React.JSX.Element => {
   return (
     <StyledContactItemWrapper>
       <StyledSvgIcon fontSize={'large'}>{children}</StyledSvgIcon>

@@ -25,7 +25,7 @@ const StyledTextField = styled(TextField)({
   marginBottom: 10,
 });
 
-export const QueryForm = (): JSX.Element => {
+export const QueryForm = (): React.JSX.Element => {
   const { control, handleSubmit, reset } = useForm<IFormInputs>();
   const [status, setStatus] = React.useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
