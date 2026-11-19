@@ -1,8 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import sendgrid from '@sendgrid/mail';
+import { Resend } from 'resend';
 
 const RECIPIENT = 'honza@honzadudek.cz';
+// Resend's shared sender only delivers to the Resend account owner's address.
+// After verifying honzadudek.cz in Resend, set RESEND_FROM to e.g. "Web <web@honzadudek.cz>".
+const DEFAULT_FROM = 'Web honzadudek.cz <onboarding@resend.dev>';
 
+// Turns user-supplied text into something safe to drop inside the HTML email body.
 const HTML_ENTITIES: Record<string, string> = {
   '&': '&amp;',
   '<': '&lt;',
@@ -23,24 +27,23 @@ const sendEmail = async (
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const apiKey = process.env.SENDGRID_API_KEY;
+  const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'SENDGRID_API_KEY is not configured' });
+    return res.status(500).json({ error: 'RESEND_API_KEY is not configured' });
   }
-  sendgrid.setApiKey(apiKey);
 
   const { fullname, email, subject, message } = req.body ?? {};
   if (!email || !message) {
     return res.status(400).json({ error: 'Missing email or message' });
   }
 
-  try {
-    await sendgrid.send({
-      to: RECIPIENT,
-      from: RECIPIENT, // must be a verified sender in SendGrid
-      replyTo: String(email),
-      subject: String(subject || 'Poptávka z webu honzadudek.cz'),
-      html: `<!DOCTYPE html>
+  // Resend returns errors instead of throwing them
+  const { error } = await new Resend(apiKey).emails.send({
+    from: process.env.RESEND_FROM || DEFAULT_FROM,
+    to: RECIPIENT,
+    replyTo: String(email),
+    subject: String(subject || 'Poptávka z webu honzadudek.cz'),
+    html: `<!DOCTYPE html>
 <html lang="cs">
   <head><meta charset="utf-8"><title>Poptávka ze serveru honzadudek.cz</title></head>
   <body style="font-family: helvetica, sans-serif; margin: 20px;">
@@ -49,9 +52,12 @@ const sendEmail = async (
     <p style="font-size: 16px; white-space: pre-wrap;">${escapeHtml(message)}</p>
   </body>
 </html>`,
-    });
-  } catch (error) {
-    return res.status(error.code || 500).json({ error: error.message });
+  });
+
+  if (error) {
+    // eslint-disable-next-line no-console
+    console.error('Resend error', error);
+    return res.status(502).json({ error: 'Email could not be sent' });
   }
 
   return res.status(200).json({ error: '' });

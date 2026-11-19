@@ -32,7 +32,7 @@ export const QueryForm = (): React.JSX.Element => {
   const onSubmit: SubmitHandler<IFormInputs> = async data => {
     setStatus('sending');
     try {
-      const res = await fetch('/api/sendgrid', {
+      const res = await fetch('/api/contact', {
         body: JSON.stringify({
           email: data.email,
           fullname: `${data.firstName} ${data.lastName}`,
