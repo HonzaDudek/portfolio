@@ -8,13 +8,11 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import Image, { ImageProps } from 'next/image';
+import Image, { ImageProps } from 'next/legacy/image';
 import theme from '../src/styles/theme';
 import Layout from '../src/components/layout';
 import { Navigation } from '../src/components/navigation';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import * as profilePicture from '../public/images/profile.jpg';
+import profilePicture from '../public/images/profile.jpg';
 import Services from './services';
 import Contact from './contact';
 
@@ -145,7 +143,7 @@ function HomePage() {
   );
 }
 
-const Home = (): JSX.Element => {
+const Home = (): React.JSX.Element => {
   return (
     <Layout home>
       <Navigation />

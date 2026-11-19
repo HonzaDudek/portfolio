@@ -1,7 +1,7 @@
 import React from 'react';
 import { SvgIcon, SvgIconProps } from "@mui/material";
 
-export const SeoIcon = (props: SvgIconProps): JSX.Element => {
+export const SeoIcon = (props: SvgIconProps): React.JSX.Element => {
   return (
     <SvgIcon
       xmlns='http://www.w3.org/2000/svg'

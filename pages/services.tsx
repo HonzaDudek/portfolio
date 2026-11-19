@@ -108,7 +108,7 @@ const Service = props => {
   );
 };
 
-const Services = (): JSX.Element => {
+const Services = (): React.JSX.Element => {
   return (
     <>
       <Divider textAlign={'left'} sx={{ width: '100%' }}>

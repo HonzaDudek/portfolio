@@ -47,7 +47,7 @@ const StyledDrawer = styled(Drawer)(() => ({
   },
 }));
 
-export const Navigation = (): JSX.Element => {
+export const Navigation = (): React.JSX.Element => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = event => {

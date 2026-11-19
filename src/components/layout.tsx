@@ -30,7 +30,7 @@ const CustomizedPageContainer = styled(Container)`
 const Layout = ({
   children,
   isDark,
-}: PropsWithChildren<LayoutProps>): JSX.Element => {
+}: PropsWithChildren<LayoutProps>): React.JSX.Element => {
   return (
     <>
       <Head>

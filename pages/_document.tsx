@@ -34,6 +34,7 @@ export default class MyDocument extends Document {
 
     ctx.renderPage = () =>
       originalRenderPage({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         enhanceApp: (App: any) => props => (
           <App emotionCache={cache} {...props} />
         ),

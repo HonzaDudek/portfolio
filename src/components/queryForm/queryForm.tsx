@@ -1,6 +1,6 @@
 import React from 'react';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
-import { Button, styled, TextField } from '@mui/material';
+import { Alert, Button, styled, TextField } from '@mui/material';
 
 interface IFormInputs {
   firstName: string;
@@ -25,28 +25,39 @@ const StyledTextField = styled(TextField)({
   marginBottom: 10,
 });
 
-export const QueryForm = (): JSX.Element => {
-  const { control, handleSubmit } = useForm<IFormInputs>();
+export const QueryForm = (): React.JSX.Element => {
+  const { control, handleSubmit, reset } = useForm<IFormInputs>();
+  const [status, setStatus] = React.useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
   const onSubmit: SubmitHandler<IFormInputs> = async data => {
-    const res = await fetch('/api/sendgrid', {
-      body: JSON.stringify({
-        email: data.email,
-        fullname: `${data.firstName} ${data.lastName}`,
-        subject: 'Poptávka z webu honzadudek.cz',
-        message: data.query,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    });
+    setStatus('sending');
+    try {
+      const res = await fetch('/api/contact', {
+        body: JSON.stringify({
+          email: data.email,
+          fullname: `${data.firstName} ${data.lastName}`,
+          subject: 'Poptávka z webu honzadudek.cz',
+          message: `${data.query}\n\nTelefon: ${data.phone}`,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      });
 
-    const { error } = await res.json();
-    if (error) {
+      if (!res.ok) {
+        // A 404 returns an HTML page, so only parse JSON when it looks like JSON
+        const isJson = res.headers.get('content-type')?.includes('application/json');
+        const body = isJson ? await res.json() : null;
+        throw new Error(body?.error || `Request failed with status ${res.status}`);
+      }
+
+      setStatus('sent');
+      reset();
+    } catch (error) {
       // eslint-disable-next-line no-console
-      console.log(error);
-      return;
+      console.error(error);
+      setStatus('error');
     }
   };
 
@@ -119,9 +130,24 @@ export const QueryForm = (): JSX.Element => {
           />
         )}
       />
-      <Button variant={'outlined'} color='primary' type={'submit'}>
-        Odeslat
+      <Button
+        variant={'outlined'}
+        color='primary'
+        type={'submit'}
+        disabled={status === 'sending'}
+      >
+        {status === 'sending' ? 'Odesílám…' : 'Odeslat'}
       </Button>
+      {status === 'sent' && (
+        <Alert severity='success' sx={{ mt: 1 }}>
+          Děkuji, zpráva byla odeslána.
+        </Alert>
+      )}
+      {status === 'error' && (
+        <Alert severity='error' sx={{ mt: 1 }}>
+          Zprávu se nepodařilo odeslat. Zkuste to prosím znovu, nebo mi napište e-mail.
+        </Alert>
+      )}
     </StyledForm>
   );
 };
