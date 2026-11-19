@@ -3,9 +3,9 @@ import { styled } from '@mui/material/styles';
 import {
   Drawer,
   IconButton,
-  List,
   ListItemText,
   MenuItem,
+  MenuList,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
@@ -20,7 +20,7 @@ const StyledHeader = styled('header')(() => ({
   zIndex: 10,
 }));
 
-const StyledMenu = styled(List)(() => ({
+const StyledMenu = styled(MenuList)(() => ({
   display: 'flex',
   width: 600,
   justifyContent: 'space-evenly',
@@ -86,10 +86,16 @@ export const Navigation = (): React.JSX.Element => {
           >
             <MenuIcon />
           </IconButton>
-          <StyledDrawer anchor={'right'} open={open} onClose={handleClose}>
-            <MenuItem onClick={() => handleClose('#home')}>Domů</MenuItem>
-            <MenuItem onClick={() => handleClose('#services')}>Služby</MenuItem>
-            <MenuItem onClick={() => handleClose('#contact')}>Kontakt</MenuItem>
+          <StyledDrawer
+            anchor={'right'}
+            open={open}
+            onClose={() => setAnchorEl(null)}
+          >
+            <MenuList>
+              <MenuItem onClick={() => handleClose('#home')}>Domů</MenuItem>
+              <MenuItem onClick={() => handleClose('#services')}>Služby</MenuItem>
+              <MenuItem onClick={() => handleClose('#contact')}>Kontakt</MenuItem>
+            </MenuList>
           </StyledDrawer>
         </>
       )}

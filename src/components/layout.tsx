@@ -39,11 +39,6 @@ const Layout = ({
           rel='stylesheet'
           href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap'
         />
-        <script
-          src='https://kit.fontawesome.com/306260bfc2.js'
-          crossOrigin='anonymous'
-        />
-
         <link
           rel='stylesheet'
           href='https://fonts.googleapis.com/icon?family=Material+Icons'
